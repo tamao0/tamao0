@@ -1,0 +1,63 @@
+● Problem: fortran error
+We have a consultation about the implementation of tsunami analysis COMCOT on mac.
+I tried to use COMCOT with gfortran from mac, but when I was executing the "make" command in the terminal, I got an error like the image.
+-------------------------------------------------- --------------------------------
+boundaries.f90: 668: 37:
+
+  579 | CALL GRID_INTERP (TEMPX, LO% X, LO% Y (1: 2), LO% NX, 2, &
+      | 2
+......
+  668 | CALL GRID_INTERP (TEMPX (I, 1), LO% CXY (I, 1,1), LO% CXY (I, 1,2), 1,1, BI% SNAPSHOT (:,:, K), BI % X, BI% Y, BI% NX, BI% NY)
+      | 1
+Error: Element of assumed-shape or pointer array as actual argument at (1) cannot correspond to actual argument at (2)
+boundaries.f90: 673: 38:
+
+  579 | CALL GRID_INTERP (TEMPX, LO% X, LO% Y (1: 2), LO% NX, 2, &
+      | 2
+......
+  673 | CALL GRID_INTERP (TEMPX (I, 2), LO% CXY (I, LO% NY, 1), &
+      | 1
+Error: Element of assumed-shape or pointer array as actual argument at (1) cannot correspond to actual argument at (2)
+-------------------------------------------------- --------------------------------
+
+The code around the line specified in the error is as follows.
+File name: boundaries.f90
+● Near line 579
+! ........... OBTAIN VALUES OF Z AT BOUNDARIES
+TEMPX = 0.0
+TEMPY = 0.0
+! BOTTOM BOUNDARY
+Line 579 CALL GRID_INTERP (TEMPX, LO% X, LO% Y (1: 2), LO% NX, 2,
+&
+-------------------------------------------------- --------------------------------
+               BI% SNAPSHOT (:,:, K), BI% X, BI% Y, BI% NX, BI% NY)
+DO I = 1, LO% NX
+BI% Z_HORI (I, K, 1) = TEMPX (I, 1)
+! WRITE (*, *) BI% Z_HORI (I, K, 1)
+ENDDO
+● Near line 669
+! ........... OBTAIN VALUES OF Z AT BOUNDARIES
+TEMPX = 0.0
+TEMPY = 0.0
+! BOTTOM BOUNDARY
+DO I = 1, LO% NX
+Line 669 CALL GRID_INTERP (TEMPX (I, 1), LO% CXY (I, 1,1),
+&
+LO% CXY (I, 1,2), 1,1,
+&
+.
+BI% SNAPSHOT (:,:, K), BI% X, BI% Y, BI% NX, BI% NY)
+BI% Z_HORI (I, K, 1) = TEMPX (I, 1)
+ENDDO
+-------------------------------------------------- --------------------------------
+Also, the same error appears on lines 669,673,680,687, ..., 751.
+
+-------------------------------------------------- --------------------------------
+● Execution environment
+macOS Catalina 10.15.7
+Terminal, fortran, home-brew, tsunami analysis COMCOT
+● About data
+I used the file downloaded from the following site.
+https://github.com/AndybnACT/comcot-gfortran
+
+I would appreciate any advice.
