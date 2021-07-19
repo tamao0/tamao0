@@ -54,8 +54,13 @@ Also, the same error appears on lines 669,673,680,687, ..., 751.
 
 -------------------------------------------------- --------------------------------
 ● Execution environment
-macOS Catalina 10.15.7
-Terminal, fortran, home-brew, tsunami analysis COMCOT
+macOS Catalina 10.15.7, Terminal, 
+
+$ gfortran --version
+GNU Fortran (Homebrew GCC 11.1.0_1) 11.1.0
+
+tsunami analysis COMCOT
+
 ● About data
 I used the file downloaded from the following site.
 https://github.com/AndybnACT/comcot-gfortran
